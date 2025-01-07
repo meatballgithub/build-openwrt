@@ -12,6 +12,9 @@ on:
   release:
     types: [published]
 
+env:
+  workdir: /mnt/openwrt
+
 jobs:
 
   build_openwrt:
@@ -70,8 +73,8 @@ jobs:
           REPO_URL: https://github.com/coolsnowwolf/lede
           REPO_BRANCH: master
         run: |
-          git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
-          cd openwrt
+          git clone --depth 1 $REPO_URL -b $REPO_BRANCH ${env.workdir}
+          cd ${env.workdir}
           echo -e 'src-git helloworld https://github.com/fw876/helloworld;master' >> ./feeds.conf.default
           echo -e 'src-git lienolpackage https://github.com/Lienol/openwrt-package' >> ./feeds.conf.default
           echo "src-git passwall_packages https://github.com/xiaorouji/openwrt-passwall-packages.git;main" >> "feeds.conf.default"
@@ -102,7 +105,7 @@ jobs:
 
       - name: Generate configuration file
         run: |
-          cd openwrt
+          cd ${env.workdir}
           rm -f ./.config*
           touch ./.config
 
@@ -255,13 +258,13 @@ jobs:
 
       - name: Make download
         run: |
-          cd openwrt
+          cd ${env.workdir}
           make download -j8
           find dl -size -1024c -exec rm -f {} \;
 
       - name: Compile firmware
         run: |
-          cd openwrt
+          cd ${env.workdir}
           make -j$(nproc) || make -j1 V=s
           echo "======================="
           echo "Space usage:"
@@ -274,7 +277,7 @@ jobs:
 
       - name: Prepare artifact
         run: |
-          cd openwrt
+          cd ${env.workdir}
           mkdir -p ./artifact/
           rm -rf $(find ./bin/targets/ -type d -name "packages")
           cp -rf $(find ./bin/targets/ -type f -name "*efi.img.gz") ./artifact/
@@ -284,4 +287,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: X64_firmware
-          path: ./artifact/
+          path: ${env.workdir}/artifact/
