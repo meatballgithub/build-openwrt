@@ -217,10 +217,10 @@ jobs:
           # LuCI主题:
           cat >> .config <<EOF
           CONFIG_PACKAGE_luci-theme-bootstrap=y
-          CONFIG_PACKAGE_luci-theme-argon is note set
-          CONFIG_PACKAGE_luci-theme-netgear is note set
-          CONFIG_PACKAGE_luci-theme-material is not set
-          CONFIG_PACKAGE_luci-theme-openwrt is not set
+          # CONFIG_PACKAGE_luci-theme-argon is note set
+          # CONFIG_PACKAGE_luci-theme-netgear is note set
+          # CONFIG_PACKAGE_luci-theme-material is not set
+          # CONFIG_PACKAGE_luci-theme-openwrt is not set
           CONFIG_LUCI_MAIN_THEME="bootstrap" #默认主题
           EOF
 
