@@ -27,37 +27,19 @@ jobs:
 
     steps:
 
-      - name: Free space
-        uses: endersonmenezes/free-disk-space@v2
-        with:
-          remove_android: true
-          remove_dotnet: true
-          remove_haskell: true
-          remove_tool_cache: true
-          remove_swap: true
-          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
-          remove_packages_one_command: true
-          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/share/glade* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell"
-          testing: false
+
 
       - name: Initialization environment
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
           df -h
-          cat /etc/apt/sources.list
-          # cat >> /etc/apt/sources.list << EOF 
-          # # 默认的 Ubuntu 存储库
-          # deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
-          # deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
-          # deb http://archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
-          # deb http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
-          # EOF
 
           sudo -E apt-mark hold grub-efi-amd64-signed
           sudo -E apt-get update
           sudo -E apt -y full-upgrade
           sudo -E apt-get -y install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev qemu-img
+          sudo -E apt-get -y install bc
           sudo -E systemctl daemon-reload
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
@@ -76,6 +58,19 @@ jobs:
 
           df -h
 
+      - name: Free space
+        uses: endersonmenezes/free-disk-space@v2
+        with:
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/share/glade* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell"
+          testing: false
+
       - name: Checkout OpenWrt
         uses: actions/checkout@v3
 
@@ -84,6 +79,7 @@ jobs:
           REPO_URL: https://github.com/coolsnowwolf/lede
           REPO_BRANCH: master
         run: |
+          df -h
           git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
           cd openwrt
           echo -e 'src-git helloworld https://github.com/fw876/helloworld;master' >> ./feeds.conf.default
@@ -113,6 +109,8 @@ jobs:
 
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+
+          df -h
 
       - name: Generate configuration file
         run: |
