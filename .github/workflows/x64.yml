@@ -24,20 +24,24 @@ jobs:
 
     steps:
 
-      - name: Space cleanup and Initialization environment
+      - name: Free space
+        uses: endersonmenezes/free-disk-space@v2
+        with:
+          remove_android: true
+          remove_dotnet: true
+          remove_haskell: true
+          remove_tool_cache: true
+          remove_swap: true
+          remove_packages: "azure-cli google-cloud-cli microsoft-edge-stable google-chrome-stable firefox postgresql* temurin-* *llvm* mysql* dotnet-sdk-*"
+          remove_packages_one_command: true
+          remove_folders: "/usr/share/swift /usr/share/miniconda /usr/share/az* /usr/share/glade* /usr/local/lib/node_modules /usr/local/share/chromium /usr/local/share/powershell"
+          testing: false
+
+      - name: Initialization environment
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
-          set +e
-          docker rmi `docker images -q`
-          echo "Deleting files, please wait ..."
-          sudo rm -rf \
-            /usr/share/dotnet \
-            /usr/local/lib/android \
-            /opt/ghc \
-            /etc/mysql \
-            /etc/php
-          sudo -E apt-get -y purge azure-cli* docker* ghc* zulu* hhvm* llvm* firefox* google* dotnet* aspnetcore* powershell* openjdk* adoptopenjdk* mysql* php* mongodb* moby* snap* || true
+          df -h
           sudo -E apt-get update
           sudo -E apt-get -y install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp nano ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev qemu-img
           sudo -E systemctl daemon-reload
@@ -200,17 +204,14 @@ jobs:
           # 常用软件包:
           cat >> .config <<EOF
           CONFIG_PACKAGE_netdata=y
-          # CONFIG_PACKAGE_wpad=y
-          # CONFIG_PACKAGE_shadowsocks-libev-ss-server=y
-          # CONFIG_PACKAGE_k3wifi=y
-          # CONFIG_PACKAGE_brcmfmac-firmware-4366c0-pcie is not set
-          # CONFIG_PACKAGE_curl=y
-          # CONFIG_PACKAGE_htop=y
-          # CONFIG_PACKAGE_nano=y
-          # CONFIG_PACKAGE_screen=y
-          # CONFIG_PACKAGE_tree=y
-          # CONFIG_PACKAGE_vim-fuller=y
-          # CONFIG_PACKAGE_wget=y
+          CONFIG_PACKAGE_openssh-sftp-server=y #sftp服务器
+          CONFIG_PACKAGE_curl=y
+          CONFIG_PACKAGE_htop=y
+          CONFIG_PACKAGE_nano=y
+          CONFIG_PACKAGE_screen=y
+          CONFIG_PACKAGE_tree=y
+          CONFIG_PACKAGE_vim-fuller=y
+          CONFIG_PACKAGE_wget=y
           EOF
 
           # 取消编译VMware镜像以及镜像填充 (不要删除被缩进的注释符号):
@@ -219,12 +220,25 @@ jobs:
           # CONFIG_VMDK_IMAGES is not set
           EOF
 
+          cat >> .config <<EOF
+          # 禁用电台相关包
+          # CONFIG_PACKAGE_radio-feature is not set
+          # CONFIG_PACKAGE_radio-driver is not set
+          EOF
+
           #
           # ========================固件定制部分结束========================
           #
 
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
+
+      - name: Cache
+        uses: stupidloud/cachewrtbuild@main
+        with:
+          ccache: 'true'
+          mixkey: 'lede_openwrt_x64'
+          prefix: ${{ github.workspace }}/openwrt
 
       - name: Make download
         run: |
