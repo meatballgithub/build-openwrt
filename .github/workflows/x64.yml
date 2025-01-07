@@ -27,8 +27,13 @@ jobs:
 
     steps:
 
+      - name: test
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          sudo -E apt install bc
+
       - name: Free space
-        run: sudo -E apt -y install bc
         uses: endersonmenezes/free-disk-space@v2
         with:
           remove_android: true
