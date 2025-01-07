@@ -45,14 +45,14 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           df -h
-
-          cat >> /etc/apt/sources.list << EOF 
-          # 默认的 Ubuntu 存储库
-          deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
-          deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
-          deb http://archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
-          deb http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
-          EOF
+          cat /etc/apt/sources.list
+          # cat >> /etc/apt/sources.list << EOF 
+          # # 默认的 Ubuntu 存储库
+          # deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
+          # deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
+          # deb http://archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
+          # deb http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+          # EOF
 
           sudo -E apt-mark hold grub-efi-amd64-signed
           sudo -E apt-get update
