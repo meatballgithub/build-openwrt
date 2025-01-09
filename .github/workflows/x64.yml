@@ -109,24 +109,6 @@ jobs:
 
           df -h
 
-      - name: Replace openssl
-        run: |
-          cd openwrt
-          cd package/libs/openssl
-
-          # 修改 Makefile 中的 PKG_VERSION 和 PKG_SOURCE_URL
-          sed -i 's/PKG_VERSION:=.*/PKG_VERSION:=1.1.1w/' Makefile
-          sed -i 's|^PKG_SOURCE_URL:=.*$|PKG_SOURCE_URL:=https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1w/|' Makefile
-          # 1.1.1w 的 sha256
-          sed -i 's/^PKG_HASH:=.*$/PKG_HASH:=cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8/' Makefile
-
-          # 清理旧文件并重新下载
-          make package/libs/openssl/clean
-          make package/libs/openssl/download
-
-          ls -l downloads/ | grep openssl
-
-
       - name: Generate configuration file
         run: |
           cd openwrt
@@ -231,8 +213,7 @@ jobs:
           # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client is not set
           # CONFIG_PACKAGE_luci-app-uhttpd is not set #uhttpd
           CONFIG_PACKAGE_luci-app-eqos=y #IP限速
-          CONFIG_PACKAGE_luci-app-adguardhome=y #ADguardHome去广告服务
-          # CONFIG_PACKAGE_luci-app-socat=y #ipv6端口转发
+          CONFIG_PACKAGE_luci-app-netdata=y
           EOF
 
           # LuCI主题:
@@ -247,7 +228,7 @@ jobs:
 
           # 常用软件包:
           cat >> .config <<EOF
-          CONFIG_PACKAGE_netdata=y
+          # CONFIG_PACKAGE_netdata=y
           CONFIG_PACKAGE_openssh-sftp-server=y #sftp服务器
           CONFIG_PACKAGE_curl=y
           CONFIG_PACKAGE_htop=y
