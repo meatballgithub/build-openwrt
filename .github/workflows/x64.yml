@@ -116,7 +116,7 @@ jobs:
 
           # 修改 Makefile 中的 PKG_VERSION 和 PKG_SOURCE_URL
           sed -i 's/PKG_VERSION:=.*/PKG_VERSION:=1.1.1w/' Makefile
-          sed -i 's|^PKG_SOURCE_URL:=.*$|PKG_SOURCE_URL:=https://www.openssl.org/source/old/$(PKG_BASE)/|' Makefile
+          sed -i 's|^PKG_SOURCE_URL:=.*$|PKG_SOURCE_URL:=https://github.com/openssl/openssl/releases/download/OpenSSL_1_1_1w/' Makefile
           # 1.1.1w 的 sha256
           sed -i 's/^PKG_HASH:=.*$/PKG_HASH:=cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8/' Makefile
 
