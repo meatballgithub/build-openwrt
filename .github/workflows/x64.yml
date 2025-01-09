@@ -109,6 +109,27 @@ jobs:
 
           df -h
 
+      - name: Replace openssl
+        run: |
+          cd openwrt
+          cd package/libs/openssl
+
+          # 修改 Makefile
+          sed -i 's/PKG_VERSION:=.*/PKG_VERSION:=1.1.1w/' Makefile
+          sed -i 's|^PKG_SOURCE_URL:=.*$|PKG_SOURCE_URL:=https://www.openssl.org/source/|' Makefile
+
+          # 计算哈希值并更新
+          wget https://www.openssl.org/source/openssl-1.1.1w.tar.gz
+          sha256sum openssl-1.1.1w.tar.gz
+          sed -i 's/^PKG_HASH:=.*$/PKG_HASH:=your_calculated_hash/' Makefile
+
+          # 清理和重新下载
+          make package/libs/openssl/clean
+          make package/libs/openssl/download
+
+          ls -l downloads/ | grep openssl
+
+
       - name: Generate configuration file
         run: |
           cd openwrt
@@ -210,10 +231,10 @@ jobs:
           # CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_SagerNet_Core is not set
           # CONFIG_PACKAGE_sagernet-core is not set
           CONFIG_PACKAGE_luci-app-passwall=y
-          CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=y
-          # CONFIG_PACKAGE_luci-app-uhttpd=y #uhttpd
-          # CONFIG_PACKAGE_luci-app-eqos=y
-          # CONFIG_DEFAULT_luci-app-adbyby-plus=y
+          # CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client is not set
+          # CONFIG_PACKAGE_luci-app-uhttpd is not set #uhttpd
+          CONFIG_PACKAGE_luci-app-eqos=y #IP限速
+          CONFIG_PACKAGE_luci-app-adguardhome=y #ADguardHome去广告服务
           # CONFIG_PACKAGE_luci-app-socat=y #ipv6端口转发
           EOF
 
