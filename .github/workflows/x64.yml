@@ -114,16 +114,13 @@ jobs:
           cd openwrt
           cd package/libs/openssl
 
-          # 修改 Makefile
+          # 修改 Makefile 中的 PKG_VERSION 和 PKG_SOURCE_URL
           sed -i 's/PKG_VERSION:=.*/PKG_VERSION:=1.1.1w/' Makefile
           sed -i 's|^PKG_SOURCE_URL:=.*$|PKG_SOURCE_URL:=https://www.openssl.org/source/|' Makefile
+          # 1.1.1w 的 sha256
+          sed -i 's/^PKG_HASH:=.*$/PKG_HASH:=cf3098950cb4d853ad95c0841f1f9c6d3dc102dccfcacd521d93925208b76ac8/' Makefile
 
-          # 计算哈希值并更新
-          wget https://www.openssl.org/source/openssl-1.1.1w.tar.gz
-          sha256sum openssl-1.1.1w.tar.gz
-          sed -i 's/^PKG_HASH:=.*$/PKG_HASH:=your_calculated_hash/' Makefile
-
-          # 清理和重新下载
+          # 清理旧文件并重新下载
           make package/libs/openssl/clean
           make package/libs/openssl/download
 
