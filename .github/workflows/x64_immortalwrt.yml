@@ -1,4 +1,4 @@
-name: X64
+name: X64_immortalwrt
 
 on:
   workflow_dispatch:
