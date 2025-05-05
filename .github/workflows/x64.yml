@@ -153,6 +153,13 @@ jobs:
           CONFIG_TARGET_x86=y
           CONFIG_TARGET_x86_64=y
           CONFIG_TARGET_x86_64_Generic=y
+          CONFIG_TARGET_ROOTFS_SQUASHFS=y
+          # CONFIG_TARGET_ROOTFS_EXT4FS is not set
+          EOF
+
+          # 启用 ccache 缓存
+          cat >> .config <<EOF
+          CONFIG_CCACHE=y
           EOF
 
           # Image Options 固件大小(MB) 不设置则是默认
@@ -253,11 +260,19 @@ jobs:
           make defconfig
 
       - name: Cache
-        uses: stupidloud/cachewrtbuild@main
+        uses: actions/cache@v4
         with:
-          ccache: 'true'
-          mixkey: 'lede_openwrt_x64'
-          prefix: ${{ github.workspace }}/openwrt
+          path: |
+            openwrt/.ccache          # 缓存 ccache 编译缓存
+          key: ${{ runner.os }}-cache-${{ github.workflow }}
+          restore-keys: |
+            ${{ runner.os }}-cache-
+
+      - name: Set up ccache
+        run: |
+          export CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache
+          export PATH="/usr/lib/ccache:$PATH"
+          ccache -s  # 查看缓存状态
 
       - name: Make download
         run: |
@@ -278,6 +293,11 @@ jobs:
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
 
+      - name: Show ccache statistics
+        run: |
+          cd openwrt
+          ccache -s
+
       - name: Prepare artifact
         run: |
           cd openwrt
@@ -289,5 +309,5 @@ jobs:
       - name: Deliver firmware
         uses: actions/upload-artifact@v4
         with:
-          name: X64_firmware
+          name: ${{ github.workflow }}_firmware
           path: openwrt/artifact/

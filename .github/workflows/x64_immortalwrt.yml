@@ -207,7 +207,7 @@ jobs:
           #CONFIG_PACKAGE_luci-app-gecoosac=y
           #CONFIG_PACKAGE_luci-app-tailscale=y
           CONFIG_PACKAGE_luci-app-autoreboot=y
-          CONFIG_PACKAGE_luci-app-filebrowser-go=y
+          # CONFIG_PACKAGE_luci-app-filebrowser-go=y # 编译极慢
           CONFIG_PACKAGE_luci-app-ttyd=y
           CONFIG_PACKAGE_luci-app-ddns-go=y
           CONFIG_PACKAGE_luci-app-frpc=y
@@ -252,20 +252,20 @@ jobs:
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
 
-      # - name: Cache
-      #   uses: stupidloud/cachewrtbuild@main
-      #   with:
-      #     ccache: 'true'
-      #     mixkey: 'immortalwrt_x64'
-      #     prefix: ${{ github.workspace }}/openwrt
-
       - name: Cache
         uses: actions/cache@v4
         with:
-          path: openwrt/dl
-          key: ${{ runner.os }}-dl-${{ github.workflow }}
+          path: |
+            openwrt/.ccache          # 缓存 ccache 编译缓存
+          key: ${{ runner.os }}-cache-${{ github.workflow }}
           restore-keys: |
-            ${{ runner.os }}-dl-
+            ${{ runner.os }}-cache-
+
+      - name: Set up ccache
+        run: |
+          export CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache
+          export PATH="/usr/lib/ccache:$PATH"
+          ccache -s  # 查看缓存状态
 
       - name: Make download
         run: |
@@ -302,5 +302,5 @@ jobs:
       - name: Deliver firmware
         uses: actions/upload-artifact@v4
         with:
-          name: X64_immortalwrt_firmware
+          name: ${{ github.workflow }}_firmware
           path: openwrt/artifact/
