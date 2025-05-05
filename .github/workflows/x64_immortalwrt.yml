@@ -141,6 +141,11 @@ jobs:
           CONFIG_TARGET_MULTI_PROFILE=n
           EOF
 
+          # 启用 ccache 缓存
+          cat >> .config <<EOF
+          CONFIG_CCACHE=y
+          EOF
+
           # Image Options 固件大小(MB) 不设置则是默认
           # cat >> .config <<EOF
           # CONFIG_TARGET_KERNEL_PARTSIZE=16
