@@ -270,9 +270,10 @@ jobs:
 
       - name: Set up ccache
         run: |
+          mkdir -p $GITHUB_WORKSPACE/openwrt/.ccache
           export CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache
           export PATH="/usr/lib/ccache:$PATH"
-          ccache -s  # 查看缓存状态
+          ccache -z  # 重置统计信息
 
       - name: Make download
         run: |
