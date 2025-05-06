@@ -143,7 +143,7 @@ jobs:
 
           # 启用 ccache 缓存
           cat >> .config <<EOF
-          CONFIG_CCACHE=y
+          CONFIG_USE_CCACHE=y
           EOF
 
           # Image Options 固件大小(MB) 不设置则是默认
