@@ -268,12 +268,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cache-
 
-      - name: Set up ccache
-        run: |
-          mkdir -p $GITHUB_WORKSPACE/openwrt/.ccache
-          export CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache
-          export PATH="/usr/lib/ccache:$PATH"
-          ccache -z  # 重置统计信息
+      # - name: Set up ccache
+      #   run: |
+      #     mkdir -p $GITHUB_WORKSPACE/openwrt/.ccache
+      #     export CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache
+      #     export PATH="/usr/lib/ccache:$PATH"
+      #     ccache -z  # 重置统计信息
 
       - name: Make download
         run: |
