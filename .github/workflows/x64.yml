@@ -263,17 +263,17 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            openwrt/.ccache          # 缓存 ccache 编译缓存
+            openwrt/.ccache
           key: ${{ runner.os }}-cache-${{ github.workflow }}
           restore-keys: |
             ${{ runner.os }}-cache-
 
-      # - name: Set up ccache
-      #   run: |
-      #     mkdir -p $GITHUB_WORKSPACE/openwrt/.ccache
-      #     export CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache
-      #     export PATH="/usr/lib/ccache:$PATH"
-      #     ccache -z  # 重置统计信息
+      - name: Configure ccache
+        run: |
+          export CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache
+          echo "CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache" >> $GITHUB_ENV
+          echo "CC='ccache gcc'" >> $GITHUB_ENV
+          echo "CXX='ccache g++'" >> $GITHUB_ENV
 
       - name: Make download
         run: |
@@ -293,6 +293,10 @@ jobs:
           du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
+        env:
+          CCACHE_DIR: ${{ github.workspace }}/openwrt/.ccache
+          CC: "ccache gcc"
+          CXX: "ccache g++"
 
       - name: Show ccache statistics
         run: |
