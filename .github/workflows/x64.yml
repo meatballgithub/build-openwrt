@@ -266,9 +266,9 @@ jobs:
             openwrt/.ccache
             openwrt/staging_dir/host
             openwrt/build_dir/host
-          key: ${{ runner.os }}-cache-${{ github.workflow }}
+          key: ${{ runner.os }}-openwrt-${{ hashFiles('openwrt/.config') }}-${{ github.run_id }}
           restore-keys: |
-            ${{ runner.os }}-cache-
+            ${{ runner.os }}-openwrt-${{ hashFiles('openwrt/.config') }}
 
       - name: Configure ccache
         run: |
