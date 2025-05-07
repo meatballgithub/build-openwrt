@@ -264,6 +264,8 @@ jobs:
         with:
           path: |
             openwrt/.ccache
+            openwrt/staging_dir/host
+            openwrt/build_dir/host
           key: ${{ runner.os }}-cache-${{ github.workflow }}
           restore-keys: |
             ${{ runner.os }}-cache-
