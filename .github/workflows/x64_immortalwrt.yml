@@ -141,11 +141,6 @@ jobs:
           # CONFIG_TARGET_ROOTFS_EXT4FS is not set
           EOF
 
-          # 启用 ccache 缓存
-          cat >> .config <<EOF
-          CONFIG_USE_CCACHE=y
-          EOF
-
           # Image Options 固件大小(MB) 不设置则是默认
           # cat >> .config <<EOF
           # CONFIG_TARGET_KERNEL_PARTSIZE=16
@@ -252,21 +247,6 @@ jobs:
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
 
-      - name: Cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            openwrt/.ccache          # 缓存 ccache 编译缓存
-          key: ${{ runner.os }}-cache-${{ github.workflow }}
-          restore-keys: |
-            ${{ runner.os }}-cache-
-
-      - name: Set up ccache
-        run: |
-          export CCACHE_DIR=$GITHUB_WORKSPACE/openwrt/.ccache
-          export PATH="/usr/lib/ccache:$PATH"
-          ccache -s  # 查看缓存状态
-
       - name: Make download
         run: |
           cd openwrt
@@ -285,11 +265,6 @@ jobs:
           du -h --max-depth=1 ./ --exclude=build_dir --exclude=bin
           du -h --max-depth=1 ./build_dir
           du -h --max-depth=1 ./bin
-
-      - name: Show ccache statistics
-        run: |
-          cd openwrt
-          ccache -s
 
       - name: Prepare artifact
         run: |
