@@ -203,8 +203,8 @@ jobs:
           # 常用LuCI插件选择:
           cat >> .config <<EOF
           CONFIG_PACKAGE_luci-app-homeproxy=y
-          CONFIG_PACKAGE_luci-app-udpxy=y
-          # CONFIG_PACKAGE_luci-nginx=y
+          CONFIG_PACKAGE_luci-nginx=y
+          # CONFIG_PACKAGE_luci-app-uhttpd is not set #uhttpd
 
           CONFIG_PACKAGE_luci-app-eqos=y #IP限速
           CONFIG_PACKAGE_luci-app-netdata=y
@@ -249,6 +249,15 @@ jobs:
 
           sed -i 's/^[ \t]*//g' ./.config
           make defconfig
+
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            openwrt/.ccache
+          key: ${{ github.workflow }}-${{ runner.os }}-${{ hashFiles('openwrt/.config') }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ github.workflow }}-${{ runner.os }}-${{ hashFiles('openwrt/.config') }}
 
       - name: Make download
         run: |
