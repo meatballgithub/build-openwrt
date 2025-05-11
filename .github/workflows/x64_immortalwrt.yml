@@ -186,29 +186,33 @@ jobs:
           # CONFIG_PACKAGE_kmod-usb3=y
           EOF
 
+
+          # CONFIG_PACKAGE_luci-app-uhttpd is not set #uhttpd
+          # CONFIG_PACKAGE_luci-app-wolplus=y
+          # CONFIG_PACKAGE_luci-app-wol=n
+          # CONFIG_PACKAGE_luci-app-package-manager=y
+          # CONFIG_PACKAGE_luci-app-samba4=y
+          # #CONFIG_PACKAGE_luci-app-gecoosac=y
+          # #CONFIG_PACKAGE_luci-app-tailscale=y
+          # CONFIG_PACKAGE_luci-app-autoreboot=y
+          # CONFIG_PACKAGE_luci-app-filebrowser-go=y
+          # CONFIG_PACKAGE_luci-app-ttyd=y
+          # CONFIG_PACKAGE_luci-app-ddns-go=y
+          # CONFIG_PACKAGE_luci-app-frpc=y
+
           # 常用LuCI插件选择:
           cat >> .config <<EOF
           CONFIG_PACKAGE_luci-app-homeproxy=y
           CONFIG_PACKAGE_luci-app-udpxy=y
-          CONFIG_PACKAGE_luci-nginx=y
-          # CONFIG_PACKAGE_luci-app-uhttpd is not set #uhttpd
+          # CONFIG_PACKAGE_luci-nginx=y
+
           CONFIG_PACKAGE_luci-app-eqos=y #IP限速
           CONFIG_PACKAGE_luci-app-netdata=y
           #####
           CONFIG_PACKAGE_luci-app-upnp=y
-          CONFIG_PACKAGE_luci-app-samba4=y
-          CONFIG_PACKAGE_luci-app-wolplus=y
-          CONFIG_PACKAGE_luci-app-wol=n
-          #CONFIG_PACKAGE_luci-app-gecoosac=y
-          #CONFIG_PACKAGE_luci-app-tailscale=y
-          CONFIG_PACKAGE_luci-app-autoreboot=y
-          CONFIG_PACKAGE_luci-app-filebrowser-go=y
-          CONFIG_PACKAGE_luci-app-ttyd=y
-          CONFIG_PACKAGE_luci-app-ddns-go=y
-          CONFIG_PACKAGE_luci-app-frpc=y
           CONFIG_PACKAGE_luci-app-unblockneteasemusic=y
           CONFIG_PACKAGE_luci-app-msd_lite=y
-          CONFIG_PACKAGE_luci-app-package-manager=y
+
           EOF
 
           # LuCI主题:
@@ -223,7 +227,6 @@ jobs:
 
           # 常用软件包:
           cat >> .config <<EOF
-          # CONFIG_PACKAGE_netdata=y
           CONFIG_PACKAGE_openssh-sftp-server=y #sftp服务器
           CONFIG_PACKAGE_curl=y
           CONFIG_PACKAGE_htop=y
