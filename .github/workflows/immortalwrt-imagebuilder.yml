@@ -34,7 +34,7 @@ jobs:
           mkdir -p  imagebuilder
           touch ./imagebuilder/build.sh
           chmod +x ./imagebuilder/build.sh
-          cat >> ./imagebuilder/build.sh <<EOF
+          cat >> ./imagebuilder/build.sh <<EOFBUILD
 
 
           read -r -d '' RAW_LIST <<'EOF'
@@ -84,7 +84,7 @@ jobs:
           make clean
           make image PROFILE=generic PACKAGES="$PACKAGES"
 
-          EOF
+          EOFBUILD
 
           cat ./imagebuilder/build.sh
 
