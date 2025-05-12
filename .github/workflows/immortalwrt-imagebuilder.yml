@@ -1,0 +1,111 @@
+name: immortalwrt-imagebuilder
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 20 * * 4
+  push:
+    branches:
+      - master
+    paths:
+      - '.github/workflows/immortalwrt-imagebuilder.yml'
+  release:
+    types: [published]
+
+env:
+  workdir: openwrt
+
+jobs:
+
+  build_openwrt:
+
+    name: Build OpenWrt firmware
+
+    runs-on: ubuntu-22.04
+
+    if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
+
+    steps:
+      - name: Checkout OpenWrt
+        uses: actions/checkout@v4
+
+      - name: Create build.sh
+        run: |
+          mkdir -p  imagebuilder
+          touch ./imagebuilder/build.sh
+          chmod +x ./imagebuilder/build.sh
+          cat >> ./imagebuilder/build.sh <<EOF
+
+
+          read -r -d '' RAW_LIST <<'EOF'
+          ###
+          default-settings-chn
+          luci-i18n-base-zh-cn
+          luci-i18n-firewall-zh-cn
+          #### web
+          luci-nginx
+          -luci-app-uhttpd
+
+          ### luci app
+          luci-i18n-package-manager-zh-cn
+          luci-app-homeproxy
+          luci-i18n-homeproxy-zh-cn
+          luci-app-acme
+          luci-i18n-acme-zh-cn
+          luci-app-eqos
+          luci-i18n-eqos-zh-cn
+          luci-app-netdata
+          luci-i18n-netdata-zh-cn
+          luci-app-upnp
+          luci-i18n-upnp-zh-cn
+          luci-app-unblockneteasemusic
+          luci-app-msd_lite
+          luci-i18n-msd_lite-zh-cn
+          luci-app-wol
+          luci-i18n-wol-zh-cn
+          luci-app-ddns
+          luci-i18n-ddns-zh-cn
+          luci-app-udpxy
+          luci-i18n-udpxy-zh-cn
+          ###
+          openssh-sftp-server #sftp服务器
+          curl
+          htop
+          nano
+          screen
+          tree
+          vim-fuller
+          wget
+          ###############
+          EOF
+          # 去掉注释、空行，并构造成空格分隔字符串
+          PACKAGES=$(echo "$RAW_LIST" | grep -vE '^\s*#' | grep -vE '^\s*$' | sed 's/#.*//' | xargs)
+          echo "$PACKAGES"
+          make clean
+          make image PROFILE=generic PACKAGES="$PACKAGES"
+
+          EOF
+
+          cat ./imagebuilder/build.sh
+
+      - name: Compile firmware
+        run: |
+          docker run --rm -i \
+              --user root \
+              -v "${{ github.workspace }}/imagebuilder/bin:/home/build/immortalwrt/bin" \
+              -v "${{ github.workspace }}/imagebuilder/build.sh:/home/build/immortalwrt/build.sh" \
+              immortalwrt/imagebuilder:x86-64-master /bin/bash /home/build/immortalwrt/build.sh
+
+      - name: Prepare artifact
+        run: |
+          cd imagebuilder
+          mkdir -p ./artifact/
+          rm -rf $(find ./bin/targets/ -type d -name "packages")
+          cp -rf $(find ./bin/targets/ -type f -name "*efi.img.gz") ./artifact/
+          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/
+
+      - name: Deliver firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.workflow }}_firmware
+          path: imagebuilder/artifact/
