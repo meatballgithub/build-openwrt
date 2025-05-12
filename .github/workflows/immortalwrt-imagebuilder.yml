@@ -96,7 +96,7 @@ jobs:
         run: |
           cd imagebuilder
           mkdir -p ./artifact/
-          cp -rf $(find ./bin/targets/ -type f -name "*squashfs-combined-efi.img") ./artifact/
+          cp -rf $(find ./bin/targets/ -type f -name "*squashfs-combined-efi.img.gz") ./artifact/
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/
 
       - name: Deliver firmware
