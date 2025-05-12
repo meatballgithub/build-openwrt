@@ -12,14 +12,11 @@ on:
   release:
     types: [published]
 
-env:
-  workdir: openwrt
-
 jobs:
 
   build_openwrt:
 
-    name: Build OpenWrt firmware
+    name: Build immortalwrt firmware
 
     runs-on: ubuntu-22.04
 
@@ -34,18 +31,18 @@ jobs:
           mkdir -p  imagebuilder
           touch ./imagebuilder/build.sh
           chmod +x ./imagebuilder/build.sh
-          cat >> ./imagebuilder/build.sh <<EOFBUILD
-
+          cat >> ./imagebuilder/build.sh <<EOF_CAT
+          #!/bin/bash
 
           read -r -d '' RAW_LIST <<'EOF'
-          ###
+          #### 自定义添加的package ####
+          ### 语言
           default-settings-chn
           luci-i18n-base-zh-cn
           luci-i18n-firewall-zh-cn
-          #### web
+          ### web
           luci-nginx
           -luci-app-uhttpd
-
           ### luci app
           luci-i18n-package-manager-zh-cn
           luci-app-homeproxy
@@ -76,7 +73,7 @@ jobs:
           tree
           vim-fuller
           wget
-          ###############
+          ########
           EOF
           # 去掉注释、空行，并构造成空格分隔字符串
           PACKAGES=$(echo "$RAW_LIST" | grep -vE '^\s*#' | grep -vE '^\s*$' | sed 's/#.*//' | xargs)
@@ -84,8 +81,7 @@ jobs:
           make clean
           make image PROFILE=generic PACKAGES="$PACKAGES"
 
-          EOFBUILD
-
+          EOF_CAT
           cat ./imagebuilder/build.sh
 
       - name: Compile firmware
@@ -100,9 +96,8 @@ jobs:
         run: |
           cd imagebuilder
           mkdir -p ./artifact/
-          rm -rf $(find ./bin/targets/ -type d -name "packages")
-          cp -rf $(find ./bin/targets/ -type f -name "*efi.img.gz") ./artifact/
-          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/
+          cp -rf $(find ./bin/targets/ -type f -name "*generic-squashfs-combined-efi.img") ./artifact/
+          cp -rf $(find ./bin/targets/ -type f -name "*.manifest") ./artifact/
 
       - name: Deliver firmware
         uses: actions/upload-artifact@v4
