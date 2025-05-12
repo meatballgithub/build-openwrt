@@ -31,7 +31,7 @@ jobs:
           mkdir -p  imagebuilder
           touch ./imagebuilder/build.sh
           chmod +x ./imagebuilder/build.sh
-          cat >> ./imagebuilder/build.sh <<EOF_CAT
+          cat >> ./imagebuilder/build.sh <<'EOF_CAT'
           #!/bin/bash
 
           read -r -d '' RAW_LIST <<'EOF'
