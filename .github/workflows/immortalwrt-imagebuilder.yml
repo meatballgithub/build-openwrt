@@ -93,7 +93,7 @@ jobs:
               --user root \
               -v "${{ github.workspace }}/imagebuilder/bin:/home/build/immortalwrt/bin" \
               -v "${{ github.workspace }}/imagebuilder/build.sh:/home/build/immortalwrt/build.sh" \
-              immortalwrt/imagebuilder:x86-64-master /bin/bash /home/build/immortalwrt/build.sh
+              immortalwrt/imagebuilder:x86-64-snapshot /bin/bash /home/build/immortalwrt/build.sh
 
       - name: Prepare artifact
         run: |
