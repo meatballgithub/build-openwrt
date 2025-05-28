@@ -47,8 +47,6 @@ jobs:
           luci-i18n-package-manager-zh-cn
           luci-app-homeproxy
           luci-i18n-homeproxy-zh-cn
-          luci-app-acme
-          luci-i18n-acme-zh-cn
           luci-app-eqos
           luci-i18n-eqos-zh-cn
           luci-app-netdata
@@ -64,6 +62,11 @@ jobs:
           luci-i18n-ddns-zh-cn
           luci-app-udpxy
           luci-i18n-udpxy-zh-cn
+          luci-app-accesscontrol
+          luci-i18n-accesscontrol-zh-cn
+          luci-app-attendedsysupgrade
+          luci-i18n-attendedsysupgrade-zh-cn
+
           ###
           openssh-sftp-server #sftp服务器
           curl
