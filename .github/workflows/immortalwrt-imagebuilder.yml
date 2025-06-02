@@ -44,28 +44,31 @@ jobs:
           luci-nginx
           -luci-app-uhttpd
           ### luci app
+          luci-i18n-acme-zh-cn
           luci-i18n-package-manager-zh-cn
-          luci-app-homeproxy
+          # luci-app-homeproxy
           luci-i18n-homeproxy-zh-cn
-          luci-app-eqos
+          # luci-app-eqos
           luci-i18n-eqos-zh-cn
-          luci-app-netdata
+          # luci-app-netdata
           luci-i18n-netdata-zh-cn
-          luci-app-upnp
+          # luci-app-upnp
           luci-i18n-upnp-zh-cn
           luci-app-unblockneteasemusic
-          luci-app-msd_lite
+          # luci-app-msd_lite
           luci-i18n-msd_lite-zh-cn
-          luci-app-wol
+          # luci-app-wol
           luci-i18n-wol-zh-cn
-          luci-app-ddns
+          # luci-app-ddns
           luci-i18n-ddns-zh-cn
-          luci-app-udpxy
+          # luci-app-udpxy
           luci-i18n-udpxy-zh-cn
           # luci-app-accesscontrol
-          # luci-i18n-accesscontrol-zh-cn
+          luci-i18n-accesscontrol-zh-cn
           luci-app-attendedsysupgrade
           luci-i18n-attendedsysupgrade-zh-cn
+          ###
+          ddns-scripts-dnspod
 
           ###
           openssh-sftp-server #sftp服务器
