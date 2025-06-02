@@ -68,7 +68,7 @@ jobs:
           luci-app-attendedsysupgrade
           luci-i18n-attendedsysupgrade-zh-cn
           ###
-          ddns-scripts-dnspod
+          # ddns-scripts-dnspod
 
           ###
           openssh-sftp-server #sftp服务器
