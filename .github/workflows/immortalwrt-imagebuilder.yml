@@ -63,12 +63,12 @@ jobs:
           luci-i18n-ddns-zh-cn
           # luci-app-udpxy
           luci-i18n-udpxy-zh-cn
-          # luci-app-accesscontrol
-          luci-i18n-accesscontrol-zh-cn
+          # # luci-app-accesscontrol
+          # luci-i18n-accesscontrol-zh-cn
           luci-app-attendedsysupgrade
           luci-i18n-attendedsysupgrade-zh-cn
           ###
-          # ddns-scripts-dnspod
+          ddns-scripts-dnspod
 
           ###
           openssh-sftp-server #sftp服务器
