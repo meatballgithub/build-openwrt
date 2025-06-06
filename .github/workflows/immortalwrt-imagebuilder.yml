@@ -44,7 +44,7 @@ jobs:
           luci-nginx
           -luci-app-uhttpd
           ### luci app
-          luci-i18n-acme-zh-cn
+          # luci-i18n-acme-zh-cn
           luci-i18n-package-manager-zh-cn
           # luci-app-homeproxy
           luci-i18n-homeproxy-zh-cn
