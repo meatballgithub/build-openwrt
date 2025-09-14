@@ -54,7 +54,7 @@ jobs:
           luci-i18n-netdata-zh-cn
           # luci-app-upnp
           luci-i18n-upnp-zh-cn
-          luci-app-unblockneteasemusic
+          # luci-app-unblockneteasemusic
           # luci-app-msd_lite
           luci-i18n-msd_lite-zh-cn
           # luci-app-wol
