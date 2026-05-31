@@ -34,6 +34,10 @@ jobs:
           cat >> ./imagebuilder/build.sh <<'EOF_CAT'
           #!/bin/bash
 
+          # Update package feeds before building
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
           read -r -d '' RAW_LIST <<'EOF'
           #### 自定义添加的package ####
           ### 语言
