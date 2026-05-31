@@ -50,7 +50,8 @@ jobs:
           luci-i18n-homeproxy-zh-cn
           # luci-app-eqos
           luci-i18n-eqos-zh-cn
-          # luci-app-netdata
+          netdata
+          luci-app-netdata
           luci-i18n-netdata-zh-cn
           # luci-app-upnp
           luci-i18n-upnp-zh-cn
