@@ -34,13 +34,6 @@ jobs:
           cat >> ./imagebuilder/build.sh <<'EOF_CAT'
           #!/bin/bash
 
-          # Update package feeds before building
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a
-
-          # Rebuild package index to ensure consistency
-          make defconfig
-
           read -r -d '' RAW_LIST <<'EOF'
           #### 自定义添加的package ####
           ### 语言
@@ -57,9 +50,8 @@ jobs:
           luci-i18n-homeproxy-zh-cn
           # luci-app-eqos
           luci-i18n-eqos-zh-cn
-          # netdata
           # luci-app-netdata
-          # luci-i18n-netdata-zh-cn
+          luci-i18n-netdata-zh-cn
           # luci-app-upnp
           luci-i18n-upnp-zh-cn
           # luci-app-unblockneteasemusic
@@ -104,7 +96,7 @@ jobs:
               --user root \
               -v "${{ github.workspace }}/imagebuilder/bin:/home/build/immortalwrt/bin" \
               -v "${{ github.workspace }}/imagebuilder/build.sh:/home/build/immortalwrt/build.sh" \
-              immortalwrt/imagebuilder:x86-64-snapshot /bin/bash /home/build/immortalwrt/build.sh
+              immortalwrt/imagebuilder:x86-64-latest /bin/bash /home/build/immortalwrt/build.sh
 
       - name: Prepare artifact
         run: |
