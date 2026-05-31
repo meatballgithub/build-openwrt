@@ -38,6 +38,9 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
+          # Rebuild package index to ensure consistency
+          make defconfig
+
           read -r -d '' RAW_LIST <<'EOF'
           #### 自定义添加的package ####
           ### 语言
